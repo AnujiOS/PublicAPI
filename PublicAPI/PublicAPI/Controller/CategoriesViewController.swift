@@ -11,7 +11,10 @@ class CategoriesViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     var categories: [String]?
+    var resultSearchController = UISearchController()
 
+    var searchcategories = [String]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,6 +24,17 @@ class CategoriesViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+
+        resultSearchController = ({
+                let controller = UISearchController(searchResultsController: nil)
+                controller.searchResultsUpdater = self
+                controller.dimsBackgroundDuringPresentation = false
+                controller.searchBar.sizeToFit()
+
+                tableView.tableHeaderView = controller.searchBar
+
+                return controller
+            })()
 
         DataManager.fetchCategories { (categories) in
             self.categories = categories
@@ -42,24 +56,31 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let categories = categories else { return 0 }
 
-        if section == 0 {
-            return 1
-        } else {
-            return categories.count - 1
+        if (resultSearchController.isActive){
+            return searchcategories.count
+        }else {
+            if section == 0 {
+                return 1
+            } else {
+                return categories.count - 1
+            }
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
 
-        guard let categories = categories else { return cell }
+        if (resultSearchController.isActive){
+            cell.textLabel?.text = searchcategories[indexPath.row]
+        }else {
+            guard let categories = categories else { return cell }
 
-        if indexPath.section == 0 {
-            cell.textLabel?.text = categories[0]
-        } else {
-            cell.textLabel?.text = categories[indexPath.row + 1]
+            if indexPath.section == 0 {
+                cell.textLabel?.text = categories[0]
+            } else {
+                cell.textLabel?.text = categories[indexPath.row + 1]
+            }
         }
-
         return cell
     }
 
@@ -83,3 +104,15 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 
+extension CategoriesViewController: UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        searchcategories.removeAll(keepingCapacity: false)
+
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+        let array = (categories! as NSArray).filtered(using: searchPredicate)
+        searchcategories = array as! [String]
+
+        self.tableView.reloadData()
+    }
+}
