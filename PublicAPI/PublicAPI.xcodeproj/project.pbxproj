@@ -101,14 +101,16 @@
 		4D2E0C6C263B14BD007B3EBE /* PublicAPI */ = {
 			isa = PBXGroup;
 			children = (
-				4D2E0C6D263B14BD007B3EBE /* AppDelegate.swift */,
-				4D2E0C6F263B14BD007B3EBE /* SceneDelegate.swift */,
-				4D2E0C71263B14BD007B3EBE /* ViewController.swift */,
-				4D2E0C73263B14BD007B3EBE /* Main.storyboard */,
-				4D2E0C79263B14EE007B3EBE /* Assets.xcassets */,
-				4D2E0C7B263B14EE007B3EBE /* LaunchScreen.storyboard */,
-				4D2E0C7E263B14EE007B3EBE /* Info.plist */,
-				4D2E0C76263B14BD007B3EBE /* PublicAPI.xcdatamodeld */,
+				4D2E0CB7263B2402007B3EBE /* Main */,
+				4D2E0CAD263B232B007B3EBE /* Resources */,
+				4D2E0CAC263B22FC007B3EBE /* UI */,
+				4D2E0CAB263B22D2007B3EBE /* Extensions */,
+				4D2E0CAA263B22C5007B3EBE /* Controller */,
+				4D2E0CA9263B22BC007B3EBE /* ViewModel */,
+				4D2E0CA8263B22B5007B3EBE /* View */,
+				4D2E0CA7263B22A8007B3EBE /* EndPoints */,
+				4D2E0CA6263B2286007B3EBE /* Network */,
+				4D2E0CA5263B2259007B3EBE /* Models */,
 			);
 			path = PublicAPI;
 			sourceTree = "<group>";
@@ -129,6 +131,84 @@
 				4D2E0C94263B14EF007B3EBE /* Info.plist */,
 			);
 			path = PublicAPIUITests;
+			sourceTree = "<group>";
+		};
+		4D2E0CA5263B2259007B3EBE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4D2E0CA6263B2286007B3EBE /* Network */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		4D2E0CA7263B22A8007B3EBE /* EndPoints */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EndPoints;
+			sourceTree = "<group>";
+		};
+		4D2E0CA8263B22B5007B3EBE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4D2E0CA9263B22BC007B3EBE /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4D2E0CAA263B22C5007B3EBE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4D2E0C71263B14BD007B3EBE /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		4D2E0CAB263B22D2007B3EBE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4D2E0CAC263B22FC007B3EBE /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				4D2E0C73263B14BD007B3EBE /* Main.storyboard */,
+				4D2E0C7B263B14EE007B3EBE /* LaunchScreen.storyboard */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		4D2E0CAD263B232B007B3EBE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4D2E0C79263B14EE007B3EBE /* Assets.xcassets */,
+				4D2E0C7E263B14EE007B3EBE /* Info.plist */,
+				4D2E0C76263B14BD007B3EBE /* PublicAPI.xcdatamodeld */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4D2E0CB7263B2402007B3EBE /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				4D2E0C6D263B14BD007B3EBE /* AppDelegate.swift */,
+				4D2E0C6F263B14BD007B3EBE /* SceneDelegate.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -442,7 +522,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WMMDDS7636;
-				INFOPLIST_FILE = PublicAPI/Info.plist;
+				INFOPLIST_FILE = PublicAPI/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -461,7 +541,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WMMDDS7636;
-				INFOPLIST_FILE = PublicAPI/Info.plist;
+				INFOPLIST_FILE = PublicAPI/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
