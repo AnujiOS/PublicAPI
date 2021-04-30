@@ -12,7 +12,7 @@ class CategoryDetailVerticalContentView: UIView, UIContentView {
 
     let nameLabel = UILabel()
     let descriptionLabel = UILabel()
-    let symbolImageView = UIImageView()
+    //let symbolImageView = UIImageView()
 
     private var currentConfiguration: CategoryDetailContentConfiguration!
     var configuration: UIContentConfiguration {
@@ -99,15 +99,15 @@ private extension CategoryDetailVerticalContentView {
                                                weight: fontWeight)
         }
 
-        // Set symbol color & weight
-        if
-            let symbolColor = configuration.symbolColor,
-            let symbolWeight = configuration.symbolWeight {
-
-            let symbolConfig = UIImage.SymbolConfiguration(weight: symbolWeight)
-            var symbol = configuration.symbol?.withConfiguration(symbolConfig)
-            symbol = symbol?.withTintColor(symbolColor, renderingMode: .alwaysOriginal)
-           // symbolImageView.image = symbol
-        }
+//        // Set symbol color & weight
+//        if
+//            let symbolColor = configuration.symbolColor,
+//            let symbolWeight = configuration.symbolWeight {
+//
+//            let symbolConfig = UIImage.SymbolConfiguration(weight: symbolWeight)
+//            var symbol = configuration.symbol?.withConfiguration(symbolConfig)
+//            symbol = symbol?.withTintColor(symbolColor, renderingMode: .alwaysOriginal)
+//           // symbolImageView.image = symbol
+//        }
     }
 }

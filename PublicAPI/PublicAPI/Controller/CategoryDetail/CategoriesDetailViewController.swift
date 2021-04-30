@@ -15,65 +15,22 @@ class CategoriesDetailViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, Entry>!
     var snapshot: NSDiffableDataSourceSnapshot<Section, Entry>!
 
+    var categoryDetailsService = CategoryDetailsService()
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print("CategoriesDetailViewController")
 
         navigationItem.title = category
 
-        // Create list layout
-        var layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+        //CollectionView Setup
+        self.collectionViewSetup()
 
-        // Define right-to-left swipe action
-        layoutConfig.trailingSwipeActionsConfigurationProvider = { [unowned self] (indexPath) in
+        fetchEntries()
+    }
 
-            guard let item = dataSource.itemIdentifier(for: indexPath) else {
-                return nil
-            }
-
-            // Create action 1
-            let action1 = UIContextualAction(style: .normal, title: "Action 1") { (action, view, completion) in
-
-                // Handle swipe action by showing an alert message
-                handleSwipe(for: action, item: item)
-
-                // Trigger the action completion handler
-                completion(true)
-            }
-            action1.backgroundColor = .systemGreen
-
-            // Create action 2
-            let action2 = UIContextualAction(style: .normal, title: "Action 2") { (action, view, completion) in
-
-                // Handle swipe action by showing alert message
-                handleSwipe(for: action, item: item)
-
-                // Trigger the action completion handler
-                completion(true)
-            }
-            action2.backgroundColor = .systemPink
-
-            // Use all the actions to create a swipe action configuration
-            // Return it to the swipe action configuration provider
-            return UISwipeActionsConfiguration(actions: [action2, action1])
-        }
-
-        // Create list layout
-
-        // Create collection view with list layout
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: listLayout)
-        view.addSubview(collectionView)
-
-        // Make collection view take up the entire view
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 0.0),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0.0),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0.0),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0.0),
-        ])
-
+    func fetchEntries() {
         // Create cell registration that define how data should be shown in a cell
         let cellRegistration = UICollectionView.CellRegistration<CategoryDetailVerticalListCell, Entry> { (cell, indexPath, item) in
 
@@ -82,13 +39,11 @@ class CategoriesDetailViewController: UIViewController {
             // content configuration to the cell
             cell.item = item
         }
-
         if let category = category {
-            DataManager.fetchEntries(category: category) { (entries) in
+            CategoryDetailsService.fetchEntries(category: category) { (entries) in
                 self.entries = entries
 
                 DispatchQueue.main.async {
-                  //  self.collectionView.reloadData()
                     // Define data source
                     self.dataSource = UICollectionViewDiffableDataSource<Section, Entry>(collectionView: self.collectionView) {
                         (collectionView: UICollectionView, indexPath: IndexPath, identifier: Entry) -> UICollectionViewCell? in
@@ -111,10 +66,84 @@ class CategoriesDetailViewController: UIViewController {
                 }
             }
         }
-
     }
 }
 
+extension CategoriesDetailViewController: UICollectionViewDelegate {
+
+    func collectionViewSetup(){
+        // Create list layout
+        let layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
+
+        /*
+         // Define right-to-left swipe action
+         layoutConfig.trailingSwipeActionsConfigurationProvider = { [unowned self] (indexPath) in
+
+         guard let item = dataSource.itemIdentifier(for: indexPath) else {
+         return nil
+         }
+
+         // Create action 1
+         let action1 = UIContextualAction(style: .normal, title: "BookMark") { (action, view, completion) in
+
+         // Handle swipe action by showing an alert message
+         handleSwipe(for: action, item: item)
+
+         // Trigger the action completion handler
+         completion(true)
+         }
+         action1.backgroundColor = .systemGreen
+
+         // Use all the actions to create a swipe action configuration
+         // Return it to the swipe action configuration provider
+         return UISwipeActionsConfiguration(actions: [action1])
+
+         }
+         */
+        // Create list layout
+
+        // Create collection view with list layout
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: listLayout)
+        view.addSubview(collectionView)
+
+        // Make collection view take up the entire view
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 0.0),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0.0),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0.0),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0.0),
+        ])
+
+    }
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+
+        // Retrieve the item identifier using index path.
+        // The item identifier we get will be the selected data item
+        // NOTE: Do not use dataItems[indexPath.item] (Apple recommends never using index paths as identifiers, as they’re not guaranteed to be stable as list items get inserted and removed.)
+        guard dataSource.itemIdentifier(for: indexPath) != nil else {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            return
+        }
+
+        /*    // Show selected Entry's name
+         let alert = UIAlertController(title: selectedItem.api,
+         message: "",
+         preferredStyle: .alert)
+
+         let okAction = UIAlertAction(title:"OK", style: .default, handler: { (_) in
+         // Deselect the selected cell
+         collectionView.deselectItem(at: indexPath, animated: true)
+         })
+         alert.addAction(okAction)
+
+         present(alert, animated: true, completion:nil)
+         */
+    }
+}
+/*
 private extension CategoriesDetailViewController {
 
     func handleSwipe(for action: UIContextualAction, item: Entry) {
@@ -129,31 +158,4 @@ private extension CategoriesDetailViewController {
         present(alert, animated: true, completion:nil)
     }
 }
-
-extension CategoriesDetailViewController: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
-
-        // Retrieve the item identifier using index path.
-        // The item identifier we get will be the selected data item
-        // NOTE: Do not use dataItems[indexPath.item] (Apple recommends never using index paths as identifiers, as they’re not guaranteed to be stable as list items get inserted and removed.)
-        guard let selectedItem = dataSource.itemIdentifier(for: indexPath) else {
-            collectionView.deselectItem(at: indexPath, animated: true)
-            return
-        }
-
-        // Show selected SFSymbol's name
-        let alert = UIAlertController(title: selectedItem.api,
-                                      message: "",
-                                      preferredStyle: .alert)
-
-        let okAction = UIAlertAction(title:"OK", style: .default, handler: { (_) in
-            // Deselect the selected cell
-            collectionView.deselectItem(at: indexPath, animated: true)
-        })
-        alert.addAction(okAction)
-
-        present(alert, animated: true, completion:nil)
-    }
-}
+*/

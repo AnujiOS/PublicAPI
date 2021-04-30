@@ -27,7 +27,6 @@ class CategoryDetailVerticalListCell: UICollectionViewListCell {
         // Update any configuration parameters related to data item
         newConfiguration.name = item?.api
         newConfiguration.description = item?.description
-       // newConfiguration.name = item?.name
 
         // Set content configuration in order to update custom content view
         contentConfiguration = newConfiguration
