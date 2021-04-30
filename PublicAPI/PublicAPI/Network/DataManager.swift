@@ -23,8 +23,8 @@ class DataManager {
             guard let data = data else { return }
 
             do {
-                var categories = try JSONDecoder().decode([String].self, from: data)
-                categories.insert("All", at: 0)
+                let categories = try JSONDecoder().decode([String].self, from: data)
+              //  categories.insert("All", at: 0)
 
                 completionHandler(categories)
             } catch let error {

@@ -13,10 +13,11 @@ class CategoriesViewController: UIViewController {
     var categories: [String]?
     var resultSearchController = UISearchController()
 
+    let reachability = try! Reachability()
+
     var searchcategories = [String]()
     var category = String()
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,6 +64,40 @@ class CategoriesViewController: UIViewController {
         UIApplication.shared.beginIgnoringInteractionEvents()
 
         return spinner
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: reachability)
+        do {
+            try reachability.startNotifier()
+        } catch {
+            print("Unable to start notifier")
+        }
+    }
+
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+
+        switch reachability.connection {
+        case .wifi:
+            print("Wifi Connection")
+            //self.internetStatusLabel.text = "Wifi Connection"
+        case .cellular:
+            print("Cellular Connection")
+            //self.internetStatusLabel.text = "Cellular Connection"
+        case .unavailable:
+            print("No Connection")
+            //self.internetStatusLabel.text = "No Connection"
+        case .none:
+            print("No Connection")
+            //self.internetStatusLabel.text = "No Connection"
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        reachability.stopNotifier()
+        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
     }
 }
 extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
