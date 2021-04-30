@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CategoriesViewController: UIViewController {
 
@@ -18,6 +19,10 @@ class CategoriesViewController: UIViewController {
     var searchcategories = [String]()
     var category = String()
 
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate //Singlton instance
+    var context:NSManagedObjectContext!
+    var spinner:UIActivityIndicatorView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +32,7 @@ class CategoriesViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
-        let spinner = showLoader(view: self.view)
+        spinner = showLoader(view: self.view)
 
         resultSearchController = ({
                 let controller = UISearchController(searchResultsController: nil)
@@ -45,9 +50,14 @@ class CategoriesViewController: UIViewController {
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                spinner.dismissLoader()
+                self.spinner.dismissLoader()
+                self.openDatabase()
             }
         }
+//        if (reachability.whenReachable != nil) {
+//
+//        }
+
     }
     func showLoader(view: UIView) -> UIActivityIndicatorView {
 
@@ -81,16 +91,13 @@ class CategoriesViewController: UIViewController {
         switch reachability.connection {
         case .wifi:
             print("Wifi Connection")
-            //self.internetStatusLabel.text = "Wifi Connection"
         case .cellular:
             print("Cellular Connection")
-            //self.internetStatusLabel.text = "Cellular Connection"
         case .unavailable:
             print("No Connection")
-            //self.internetStatusLabel.text = "No Connection"
+            self.fetchData()
         case .none:
             print("No Connection")
-            //self.internetStatusLabel.text = "No Connection"
         }
     }
 
@@ -99,6 +106,63 @@ class CategoriesViewController: UIViewController {
         reachability.stopNotifier()
         NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
     }
+
+    // MARK: Methods to Open, Store and Fetch data
+       func openDatabase()
+       {
+           context = appDelegate.persistentContainer.viewContext
+           let entity = NSEntityDescription.entity(forEntityName: "Categories", in: context)
+           let newCategories = NSManagedObject(entity: entity!, insertInto: context)
+           saveData(UserDBObj:newCategories)
+       }
+    func saveData(UserDBObj:NSManagedObject)
+        {
+            UserDBObj.setValue(categories, forKey:"name")
+            print("Storing Data..")
+            do {
+                try context.save()
+            } catch {
+                print("Storing data Failed")
+            }
+            fetchData()
+        }
+
+    func fetchData()
+        {
+            print("Fetching Data..")
+            context = appDelegate.persistentContainer.viewContext
+            let entity = NSEntityDescription.entity(forEntityName: "Categories", in: context)
+            let newCategories = NSManagedObject(entity: entity!, insertInto: context)
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Categories")
+            request.returnsObjectsAsFaults = false
+            do {
+                let result = try context.fetch(request)
+                for data in result as! [NSManagedObject] {
+                    let name = data.value(forKey: "name")
+
+                    if categories?.count == nil {
+                        if name != nil{
+                            self.categories = name as? [String]
+                            self.spinner.dismissLoader()
+                            self.tableView.reloadData()
+                        }else {
+                            self.spinner.dismissLoader()
+                            let alert = UIAlertController(title: "Alert",
+                                                          message: "Please connect to Internet",
+                                                          preferredStyle: .alert)
+
+                            let okAction = UIAlertAction(title:"OK", style: .default, handler: { (_) in })
+                            alert.addAction(okAction)
+
+                            present(alert, animated: true, completion:nil)
+                        }
+                    }
+                }
+            } catch {
+                print("Fetching data Failed")
+            }
+        }
+
 }
 extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
 
@@ -176,8 +240,10 @@ extension CategoriesViewController: UISearchResultsUpdating {
         searchcategories.removeAll(keepingCapacity: false)
 
         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (categories! as NSArray).filtered(using: searchPredicate)
-        searchcategories = array as! [String]
+        if categories != nil{
+            let array = (categories! as NSArray).filtered(using: searchPredicate)
+            searchcategories = array as! [String]
+        }
 
         self.tableView.reloadData()
     }
