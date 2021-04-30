@@ -125,7 +125,7 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
         if (categoryViewModel.resultSearchController.isActive){
             return searchcategories.count
         }else {
-            return categories.count - 1
+            return categories.count
         }
     }
     
@@ -138,7 +138,7 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
         }else {
             guard let categories = categories else { return cell }
             
-            cell.textLabel?.text = categories[indexPath.row + 1]
+            cell.textLabel?.text = categories[indexPath.row]
         }
         return cell
     }
@@ -152,14 +152,11 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
             category = searchcategories[indexPath.row]
         }else {
             guard let categories = categories else { return }
-            
-            if indexPath.section == 0 {
-                category = categories[0]
-            } else {
-                category = categories[indexPath.row + 1]
-            }
+
+                category = categories[indexPath.row]
         }
         DispatchQueue.main.async {
+            self.categoryViewModel.resultSearchController.dismiss(animated: false, completion: nil)
             self.performSegue(withIdentifier: "toDetailVC", sender: self)
         }
     }

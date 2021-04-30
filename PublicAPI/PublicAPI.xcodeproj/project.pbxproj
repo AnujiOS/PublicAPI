@@ -116,15 +116,14 @@
 			isa = PBXGroup;
 			children = (
 				4D2E0CB7263B2402007B3EBE /* Main */,
-				4D2E0CAD263B232B007B3EBE /* Resources */,
+				4D2E0CA6263B2286007B3EBE /* Network */,
+				4D2E0CA7263B22A8007B3EBE /* EndPoints */,
 				4D2E0CAC263B22FC007B3EBE /* UI */,
-				4D2E0CAB263B22D2007B3EBE /* Extensions */,
 				4D2E0CAA263B22C5007B3EBE /* Controller */,
 				4D2E0CA9263B22BC007B3EBE /* ViewModel */,
-				4D2E0CA8263B22B5007B3EBE /* View */,
-				4D2E0CA7263B22A8007B3EBE /* EndPoints */,
-				4D2E0CA6263B2286007B3EBE /* Network */,
 				4D2E0CA5263B2259007B3EBE /* Models */,
+				4D2E0CAD263B232B007B3EBE /* Resources */,
+				4D2E0CAB263B22D2007B3EBE /* Extensions */,
 			);
 			path = PublicAPI;
 			sourceTree = "<group>";
@@ -166,13 +165,6 @@
 				4D2E0D45263C7CED007B3EBE /* CategoryList */,
 			);
 			path = EndPoints;
-			sourceTree = "<group>";
-		};
-		4D2E0CA8263B22B5007B3EBE /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		4D2E0CA9263B22BC007B3EBE /* ViewModel */ = {

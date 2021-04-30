@@ -22,15 +22,25 @@ class CategoriesDetailViewController: UIViewController {
         super.viewDidLoad()
         print("CategoriesDetailViewController")
 
-        navigationItem.title = category
-
-        //CollectionView Setup
-        self.collectionViewSetup()
-
         fetchEntries()
+        self.navigationItem.title = category
     }
 
     func fetchEntries() {
+        if let category = category {
+            CategoryDetailsService.fetchEntries(category: category) { (entries) in
+                self.entries = entries
+
+                DispatchQueue.main.async {
+                    // Define data source
+                    self.collectionViewSetup()
+                    self.setupCell()
+                }
+            }
+        }
+    }
+
+    func setupCell() {
         // Create cell registration that define how data should be shown in a cell
         let cellRegistration = UICollectionView.CellRegistration<CategoryDetailVerticalListCell, Entry> { (cell, indexPath, item) in
 
@@ -39,33 +49,25 @@ class CategoriesDetailViewController: UIViewController {
             // content configuration to the cell
             cell.item = item
         }
-        if let category = category {
-            CategoryDetailsService.fetchEntries(category: category) { (entries) in
-                self.entries = entries
+        self.dataSource = UICollectionViewDiffableDataSource<Section, Entry>(collectionView: self.collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Entry) -> UICollectionViewCell? in
 
-                DispatchQueue.main.async {
-                    // Define data source
-                    self.dataSource = UICollectionViewDiffableDataSource<Section, Entry>(collectionView: self.collectionView) {
-                        (collectionView: UICollectionView, indexPath: IndexPath, identifier: Entry) -> UICollectionViewCell? in
+            // Dequeue reusable cell using cell registration (Reuse identifier no longer needed)
+            let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                                    for: indexPath,
+                                                                    item: identifier)
 
-                        // Dequeue reusable cell using cell registration (Reuse identifier no longer needed)
-                        let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
-                                                                                for: indexPath,
-                                                                                item: identifier)
-
-                        return cell
-                    }
-
-                    // Create a snapshot that define the current state of data source's data
-                    self.snapshot = NSDiffableDataSourceSnapshot<Section, Entry>()
-                    self.snapshot.appendSections([.main])
-
-                    self.snapshot.appendItems(entries, toSection: .main)
-                        // Display data on the collection view by applying the snapshot to data source
-                    self.dataSource.apply(self.snapshot, animatingDifferences: false)
-                }
-            }
+            return cell
         }
+
+        // Create a snapshot that define the current state of data source's data
+        self.snapshot = NSDiffableDataSourceSnapshot<Section, Entry>()
+        self.snapshot.appendSections([.main])
+        if entries != nil {
+            self.snapshot.appendItems(entries!, toSection: .main)
+        }
+            // Display data on the collection view by applying the snapshot to data source
+        self.dataSource.apply(self.snapshot, animatingDifferences: false)
     }
 }
 
@@ -75,7 +77,6 @@ extension CategoriesDetailViewController: UICollectionViewDelegate {
         // Create list layout
         let layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         let listLayout = UICollectionViewCompositionalLayout.list(using: layoutConfig)
-
         /*
          // Define right-to-left swipe action
          layoutConfig.trailingSwipeActionsConfigurationProvider = { [unowned self] (indexPath) in
@@ -105,7 +106,9 @@ extension CategoriesDetailViewController: UICollectionViewDelegate {
 
         // Create collection view with list layout
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: listLayout)
+      //  self.collectionView.delegate = self
         view.addSubview(collectionView)
+        
 
         // Make collection view take up the entire view
         collectionView.translatesAutoresizingMaskIntoConstraints = false
