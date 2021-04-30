@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import UIKit
 
 struct APIResponse: Codable {
     let count: Int
     let entries: [Entry]
 }
 
-struct Entry: Codable {
+struct Entry: Codable,Hashable {
     let api: String
     let description: String
     let auth: String
@@ -43,4 +44,28 @@ enum Cors: String, Codable {
     case no = "no"
     case unknown = "unknown"
     case yes = "yes"
+}
+
+enum Section {
+    case main
+}
+
+enum ListItem: Hashable {
+    case header(HeaderItem)
+    case symbol(SFSymbolItem)
+}
+
+struct HeaderItem: Hashable {
+    let title: String
+    let symbols: [SFSymbolItem]
+}
+
+struct SFSymbolItem: Hashable {
+    let name: String
+    let image: UIImage
+
+    init(name: String) {
+        self.name = name
+        self.image = UIImage(systemName: name)!
+    }
 }

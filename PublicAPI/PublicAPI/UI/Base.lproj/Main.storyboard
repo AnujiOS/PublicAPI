@@ -53,11 +53,28 @@
                     <navigationItem key="navigationItem" id="Iql-C2-Pbw"/>
                     <connections>
                         <outlet property="tableView" destination="ulj-vm-dW9" id="gKl-i4-OZI"/>
+                        <segue destination="74x-XS-Pqk" kind="show" identifier="toDetailVC" id="XqF-kq-OP2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-520.28985507246375" y="-93.080357142857139"/>
+        </scene>
+        <!--Categories Detail View Controller-->
+        <scene sceneID="FHU-RH-Qzf">
+            <objects>
+                <viewController id="74x-XS-Pqk" customClass="CategoriesDetailViewController" customModule="PublicAPI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vkr-Id-kRq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7rg-Xq-3MX"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="MS4-xT-rAC"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="414-JU-vUF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="218.84057971014494" y="-81.026785714285708"/>
         </scene>
     </scenes>
     <resources>

@@ -14,13 +14,15 @@ class CategoriesViewController: UIViewController {
     var resultSearchController = UISearchController()
 
     var searchcategories = [String]()
+    var category = String()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.title = "Categories"
         navigationController?.navigationBar.prefersLargeTitles = true
-
+    
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
@@ -44,8 +46,6 @@ class CategoriesViewController: UIViewController {
             }
         }
     }
-
-
 }
 extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
 
@@ -85,22 +85,35 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let categories = categories else { return }
 
-        var category: String
+        if (resultSearchController.isActive){
+            guard  searchcategories != nil else {
+                return
+            }
+            category = searchcategories[indexPath.row]
+        }else {
+            guard let categories = categories else { return }
 
-        if indexPath.section == 0 {
-            category = categories[0]
-        } else {
-            category = categories[indexPath.row + 1]
+
+            if indexPath.section == 0 {
+                category = categories[0]
+            } else {
+                category = categories[indexPath.row + 1]
+            }
         }
-
-//        let apisViewController = APIsViewController(style: .plain)
-//        apisViewController.category = category
-//
-//        navigationController?.pushViewController(apisViewController, animated: true)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "toDetailVC", sender: self)
+        }
     }
 
+    // MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toDetailVC" {
+            let destinationVC = segue.destination as? CategoriesDetailViewController
+                destinationVC?.category = category
+        }
+    }
 }
 
 
@@ -116,3 +129,4 @@ extension CategoriesViewController: UISearchResultsUpdating {
         self.tableView.reloadData()
     }
 }
+
