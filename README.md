@@ -8,10 +8,10 @@ List Screen - a screen where you will have to implement search.
 Detail Screen - screen where you could display the details of a selected item from the list
 
 Instruction:
-Use at least 1 UICollectionView
-Use at least 1 UITableView
-Implement using Swift and MVVM/VIPER
-The code should be unit tested
-UI has to be responsive
-Code must be pushed on a GitHub public repository with incremental commits
-Make sure you don't use unnecessary third-party libraries.
+* Use at least 1 UICollectionView
+* Use at least 1 UITableView
+* Implement using Swift and MVVM/VIPER
+* The code should be unit tested
+* UI has to be responsive
+* Code must be pushed on a GitHub public repository with incremental commits
+* Make sure you don't use unnecessary third-party libraries.
