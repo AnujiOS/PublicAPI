@@ -26,6 +26,7 @@ class CategoriesViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+        let spinner = showLoader(view: self.view)
 
         resultSearchController = ({
                 let controller = UISearchController(searchResultsController: nil)
@@ -43,9 +44,26 @@ class CategoriesViewController: UIViewController {
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                spinner.dismissLoader()
             }
         }
     }
+    func showLoader(view: UIView) -> UIActivityIndicatorView {
+
+            //Customize as per your need
+            let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height:60))
+            spinner.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+            spinner.layer.cornerRadius = 3.0
+            spinner.clipsToBounds = true
+            spinner.hidesWhenStopped = true
+            spinner.style = UIActivityIndicatorView.Style.medium
+            spinner.center = view.center
+            view.addSubview(spinner)
+            spinner.startAnimating()
+            UIApplication.shared.beginIgnoringInteractionEvents()
+
+            return spinner
+        }
 }
 extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
 
@@ -130,3 +148,9 @@ extension CategoriesViewController: UISearchResultsUpdating {
     }
 }
 
+extension UIActivityIndicatorView {
+     func dismissLoader() {
+            self.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+        }
+ }
